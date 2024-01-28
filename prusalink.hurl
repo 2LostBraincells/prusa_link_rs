@@ -1,0 +1,2 @@
+GET https://connect.prusa3d.com/app/printers?limit=3
+Cookie: SESSID="QlpoOTFBWSZTWcluHMkAABv/94AOqkAMAFoASMAAogQoEAEBMggRYMkitEAwoQAAEKAAVFIAA0AA0aAAA9IYAA0AAANGmIZGgFvKeuauUAQfCc9htEdjGncqBVfZnRqPoo7iBKInr5jLn76+DwPQPYf8XckU4UJDJbhzJA=="
