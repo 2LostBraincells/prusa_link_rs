@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct PrinterTemperature {
@@ -61,20 +59,24 @@ struct PrinterFlags {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct PrinterTelemetry {
+    #[serde(rename = "temp-bed")]
     bed_temp: f32,
+    #[serde(rename = "temp-nozzle")]
     nozzle_temp: f32,
     material: String,
+    #[serde(rename = "z-height")]
     z_height: f32,
+    #[serde(rename = "print-speed")]
     print_speed: f32,
     axis_x: Option<f32>,
     axis_y: Option<f32>,
     axis_z: Option<f32>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-struct PrinterStorageInfo {
-    free_space: u64,
-    total_space: u64,
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+pub struct PrinterStorageInfo {
+    pub free_space: u64,
+    pub total_space: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -129,8 +131,24 @@ impl RawPrinter {
         self.state.flags.prepared
     }
 
+    pub fn get_printing(&self) -> bool {
+        self.state.flags.printing
+    }
+
+    pub fn get_cancelling(&self) -> bool {
+        self.state.flags.cancelling
+    }
+
+    pub fn get_pausing(&self) -> bool {
+        self.state.flags.pausing
+    }
+
     pub fn get_link_state(&self) -> &str {
         &self.state.flags.link_state
+    }
+
+    pub fn get_state_text(&self) -> &str {
+        &self.state.text
     }
 
     pub fn get_bed_temp(&self) -> f32 {
@@ -167,5 +185,13 @@ impl RawPrinter {
 
     pub fn get_axis_y_telemetry(&self) -> Option<f32> {
         self.telemetry.axis_y
+    }
+
+    pub fn get_local_storage_space(&self) -> Option<&PrinterStorageInfo> {
+        self.storage.local.as_ref()
+    }
+
+    pub fn get_sd_storage_space(&self) -> Option<&PrinterStorageInfo> {
+        self.storage.sd_card.as_ref()
     }
 }
